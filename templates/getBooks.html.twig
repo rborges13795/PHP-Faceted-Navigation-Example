@@ -1,0 +1,260 @@
+{% extends 'root.html.twig' %}
+{% block title %}Books{% endblock %}
+{% block content %}
+	<section class="container-fluid">
+  		<form action="/books" method="GET">
+	  		<div class="container-fluid">
+				<h1 class="mt-2 pb-2">Search!</h1>
+				
+    	  		<div class="row">
+        	  		<div class="col">
+        		        <input class="form-control" autocomplete="off" type="text" 
+        		        name="intitle" placeholder="Title" aria-label="Title">
+    		        </div>
+    		        
+    		        <div class="col">
+        		        <input class="form-control" autocomplete="off" type="text" 
+        		        name="inauthor" placeholder="Author" aria-label="Author">
+    		        </div>
+		        </div>
+		        
+		        <div class="pt-2">
+    	        	<button class="btn btn-outline-success" type="submit">Search</button>
+    	        	<button class="btn btn-outline-primary" data-bs-target="#AdvancedSearch" type="button" 
+    	        	data-bs-toggle="modal">Advanced Search</button>
+	        	</div>
+	        	
+	        </div>
+      	</form>
+	</section>
+	{% if notFound %}
+	<section class="container-fluid">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-3">
+    				<div class="pb-2">
+        				<div class="pb-2">
+        					<p class="fs-4">Results <a style="opacity: 0.9; font-size: 0.7em;">({{ results }})</a></p>
+        				</div>
+    				</div>
+				</div>
+				
+				<div class="col-9">
+					<div class="container">
+                        <p>There are no movies that matched your query.</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="AdvancedSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<form action="/books" method="GET">
+            <div class="modal-dialog">           
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                    	<div class="mb-3">
+            		        <input class="form-control" autocomplete="off" type="text"
+            		         name="intitle" placeholder="Title" aria-label="Title">
+        		        </div>
+        		        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="inauthor" placeholder="Author" aria-label="Author">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="inpublisher" placeholder="Publisher" aria-label="Author">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="subject" placeholder="Category e.g. Fiction" aria-label="Subject">
+                        </div>
+                        
+        		        <div class="mb-3">
+            		        <input class="form-control" autocomplete="off" type="text" 
+            		        name="isbn" placeholder="ISBN (The author's name or the title must be filled too)" aria-label="Isbn">
+        		        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    	<button type="submit" class="btn btn-primary">Search</button>
+                    </div>                    
+                </div>                
+            </div>
+        </form>
+    </div>
+	{% else %}
+	<section class="container-fluid">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-3">
+    				<div class="pb-2">
+    					<p class="fs-4">Results <a style="opacity: 0.9; font-size: 0.7em;">({{ results }})</a></p>
+    					<p class="fs-4" >Print Type</p>
+    						<span><a class="dropdown-item fs-6" style="border-top: 2px solid #ddd;"></a></span>
+        					<a class="dropdown-item fs-6" href="{{ query }}&printType=All">All</a>
+        					<a class="dropdown-item fs-6" href="{{ query }}&printType=books">Books</a>
+        					<a class="dropdown-item fs-6" href="{{ query }}&printType=magazines">Magazines</a>
+    				</div>
+    				
+    				<div class="pb-2">
+    					<p class="fs-4" >Ebooks</p>
+    						<span><a class="dropdown-item fs-6" style="border-top: 2px solid #ddd;"></a></span>
+    						<a class="dropdown-item fs-6" href="{{ query }}&filter=ebooks">All</a>
+                            <a class="dropdown-item fs-6" href="{{ query }}&filter=free-ebooks">Free-Ebooks</a>
+                            <a class="dropdown-item fs-6" href="{{ query }}&filter=paid-ebooks">Paid-Ebooks</a>
+    				</div>
+    				
+    				<div class="pb-2">
+    					<p class="fs-4">Categories</p>
+    						<span><a class="dropdown-item fs-6" style="border-top: 2px solid #ddd;"></a></span>
+        					{% for name, number in category %}
+        						<a class="dropdown-item fs-6" href="{{ query }}&subject={{ name }}">
+        						{{ name }} <span style="opacity: 0.9; font-size: 0.7em;">({{ number }})</span>
+        						</a>
+    						{% endfor %}
+    				</div>
+				</div>
+				
+				<div class="col-9">
+					<div class="dropdown">
+                        <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" 
+                        aria-expanded="false">
+                        	Sort By
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                            <li><a class="dropdown-item" href="{{ query }}&orderBy=relevance">Relevance</a></li>
+                            <li><a class="dropdown-item" href="{{ query }}&orderBy=newest">Newest</a></li>
+                        </ul>
+                        <span class="badge bg-primary">Author</span>
+                        <span class="badge bg-secondary">Publisher</span>
+                        <span class="badge bg-warning text-dark">Category</span>
+                        <span class="badge bg-info text-dark">Pages</span>
+                    </div>
+					<div class="container pt-2">
+						{% for books in book %}
+    						{% if books.getTitle %}
+    			        	<div class="card card-shadow d-flex flex-row flex-nowrap">
+                        		<div>
+                        			<img src="{{ books.getSmallThumbnail }}" 
+                        			class="card-img-top result-cards" alt="...">
+                        		</div>
+                        		<div class="details">
+                            		<div class="wrapper">	
+                            			<div class="title">
+                            				<div style="width: 100%; line-height: 100%; display: inline-block;">
+                            					<a>
+                            				        <h2>{{ books.getTitle }} </h2>
+                            				    </a>
+                            				</div>
+                            				<div>
+                                				<span class="badge" style="color: #999; font-size: 0.9em;"> {{ books.getPublishedDate }} </span>
+                                			</div>
+                            				<div class="d-flex justify-content-between" style="width: 75%;">
+                            					{% if books.getAuthor|length <= 3 %}
+                                					{% for author in books.getAuthor %}
+        												<span class="badge bg-primary ">{{ author }}</span>
+        											{% endfor %}
+											    {% else %}
+													<span class="badge bg-primary ">{{ books.getAuthor[0] }}</span>
+													<span class="badge bg-primary ">{{ books.getAuthor[1] }}</span>
+													<span class="badge bg-primary "> others </span>
+    											{% endif %}
+    					                        <span class="badge bg-secondary">{{ books.getPublisher }}</span>
+    					                        
+    					                        {% for category in books.getCategories %}
+                                                	<span class="badge bg-warning text-dark">{{ category }}</span>
+                                            	{% endfor %}
+                                            	
+                                                <span class="badge bg-info text-dark">{{ books.getPageCount }}</span>
+                            				</div>
+                            			</div>
+                        			</div>
+                        			<div>
+                        			{% if books.getTextSnippet %}
+                        				<p>{{ books.getTextSnippet }}</p>
+                    				{% else %}
+                    					<p class="line-clamp">{{ books.getDescription }}</p>
+                					{% endif %}
+                        			</div>
+                        		</div>		
+                        	</div>
+                        	{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav aria-label="Page navigation">
+            <ul class="pagination" style="justify-content: center; align-content: center;">
+                            
+                
+                {% if lastIndex > 10 and results > 11 and indexPage > 9%}
+                	<li class="page-item"><a class="page-link" href="{{ query }}&startIndex={{ indexPage - 10 }}">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="{{ query }}&startIndex=0">1</a></li>
+                	<li class="page-item"><a class="page-link" href="{{ query }}&startIndex={{ indexPage + 10 }}">Next</a></li>
+            	{% elseif indexPage <= 9 %}
+                	<li class="page-item"><a class="page-link" href="{{ query }}&startIndex={{ indexPage + 10 }}">Next</a></li>
+            	{% elseif lastIndex <= 10 %}
+            		<li class="page-item"><a class="page-link" href="{{ query }}&startIndex={{ indexPage - 10 }}">Previous</a></li>
+                {% endif %}
+                
+            </ul>
+        </nav>
+	</section>
+	
+	<div class="modal fade" id="AdvancedSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<form action="/books" method="GET">
+            <div class="modal-dialog">           
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                    	<div class="mb-3">
+            		        <input class="form-control" autocomplete="off" type="text"
+            		         name="intitle" placeholder="Title" aria-label="Title">
+        		        </div>
+        		        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="inauthor" placeholder="Author" aria-label="Author">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="inpublisher" placeholder="Publisher" aria-label="Author">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <input class="form-control" autocomplete="off" type="text" 
+                            name="subject" placeholder="Category e.g. Fiction" aria-label="Subject">
+                        </div>
+                        
+        		        <div class="mb-3">
+            		        <input class="form-control" autocomplete="off" type="text" 
+            		        name="isbn" placeholder="ISBN (The author's name or the title must be filled too)" aria-label="Isbn">
+        		        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    	<button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>                
+            </div>
+        </form>
+    </div>
+	{% endif %}
+{% endblock %}

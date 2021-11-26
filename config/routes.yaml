@@ -1,0 +1,10 @@
+
+index:
+  path: /index
+  methods: GET
+  controller: App\Controller\BookController::index
+  
+books:
+  path: /books
+  methods: GET
+  controller: App\Controller\BookController::getBooks
