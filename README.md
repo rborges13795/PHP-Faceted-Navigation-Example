@@ -18,7 +18,7 @@ To initiate a server:
 php -S localhost:8080 -t public
 ```
 ## The Data
-This app uses the 'Google Books Api' ([TMDb](https://www.themoviedb.org)) api as the source of the data and images used. You can find it ([here](https://developers.google.com/books/docs/v1/getting_started)).
+This app uses the 'Google Books Api' api as the source of the data and images used. You can find it ([here](https://developers.google.com/books/docs/v1/getting_started)).
 ## Requirements
 - PHP >= 7.3
 - OpenSSL PHP Extension
